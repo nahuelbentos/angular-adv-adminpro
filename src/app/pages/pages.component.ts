@@ -1,17 +1,16 @@
 import { Component, OnInit } from '@angular/core';
+import { SettingsService } from '../services/settings.service';
 
+declare function customInitFunctions();
 @Component({
   selector: 'app-pages',
   templateUrl: './pages.component.html',
   styles: [],
 })
 export class PagesComponent implements OnInit {
-  public linkTheme =  document.querySelector('#theme') ;
-  constructor() {}
+  constructor(private settingsServices: SettingsService) {}
 
   ngOnInit(): void {
-    const url = localStorage.getItem('theme') || './assets/css/colors/red-dark.css';
-
-    this.linkTheme.setAttribute('href', url);
+    customInitFunctions();
   }
 }
