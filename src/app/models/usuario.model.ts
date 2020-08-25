@@ -1,3 +1,5 @@
+import { environment } from 'src/environments/environment';
+
 export class Usuario {
   constructor(
     public nombre: string,
@@ -8,4 +10,15 @@ export class Usuario {
     public role?: string,
     public uid?: string
   ) {}
+
+  get imagenUrl() {
+    if (this.img.includes('https')) {
+      return this.img;
+    }
+    if (this.img) {
+      return `${environment.baseUrl}/upload/usuarios/${this.img}`;
+    } else {
+      return `${environment.baseUrl}/upload/usuarios/no-image`;
+    }
+  }
 }
