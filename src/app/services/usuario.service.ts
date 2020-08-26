@@ -30,9 +30,6 @@ export class UsuarioService {
   get token(): string {
     return localStorage.getItem('token') || '';
   }
-  get uid(): string {
-    return this.usuario.uid || '';
-  }
 
   get headers() {
     return {
@@ -40,6 +37,10 @@ export class UsuarioService {
         'x-token': this.token,
       },
     };
+  }
+
+  get uid(): string {
+    return this.usuario.uid || '';
   }
 
   googleInit() {
