@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { map } from 'rxjs/operators';
+import { Usuario } from '../models/usuario.model';
 
 @Injectable({
   providedIn: 'root',
@@ -27,6 +28,34 @@ export class BusquedasService {
         `${environment.baseUrl}/busqueda/coleccion/${tipo}/${filtro}`,
         this.headers
       )
-      .pipe(map((resp: any) => resp.resultados));
+      .pipe(
+        map((resp: any) => {
+          switch (tipo) {
+            case 'usuarios':
+              console.log(resp);
+
+              return this.transformarUsuarios(resp.resultados);
+              break;
+
+            default:
+              break;
+          }
+        })
+      );
+  }
+
+  private transformarUsuarios(resultados: any): Usuario[] {
+    return resultados.map(
+      (user) =>
+        new Usuario(
+          user.nombre,
+          user.email,
+          '',
+          user.img,
+          user.google,
+          user.role,
+          user.uid
+        )
+    );
   }
 }

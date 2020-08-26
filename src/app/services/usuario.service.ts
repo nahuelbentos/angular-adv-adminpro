@@ -92,7 +92,6 @@ export class UsuarioService {
       ...data,
       role: this.usuario.role,
     };
-
     return this.http.put(
       `${environment.baseUrl}/usuarios/${this.uid}`,
       data,
@@ -101,7 +100,6 @@ export class UsuarioService {
   }
 
   login(formData: LoginForm) {
-    console.log('login usuairo');
     return this.http.post(`${environment.baseUrl}/login`, formData).pipe(
       tap((res: any) => {
         localStorage.setItem('token', res.token);
@@ -112,7 +110,6 @@ export class UsuarioService {
   }
 
   loginGoogle(token: string) {
-    console.log('login usuairo');
     return this.http
       .post(`${environment.baseUrl}/login/google`, { token })
       .pipe(
@@ -131,7 +128,6 @@ export class UsuarioService {
       this.ngZone.run(() => {
         this.router.navigateByUrl('/login');
       });
-      console.log('User signed out.');
     });
   }
 
@@ -142,7 +138,6 @@ export class UsuarioService {
         this.headers
       )
       .pipe(
-        delay(500),
         map((resp) => {
           const usuarios = resp.usuarios.map(
             (user) =>
@@ -162,5 +157,20 @@ export class UsuarioService {
           };
         })
       );
+  }
+
+  eliminarUsuario(usuario: Usuario) {
+    return this.http.delete(
+      `${environment.baseUrl}/usuarios/${usuario.uid}`,
+      this.headers
+    );
+  }
+
+  cambiarUsuario(usuario: Usuario) {
+    return this.http.put(
+      `${environment.baseUrl}/usuarios/${usuario.uid}`,
+      usuario,
+      this.headers
+    );
   }
 }
