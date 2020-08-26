@@ -12,13 +12,12 @@ export class Usuario {
   ) {}
 
   get imagenUrl() {
-    if (this.img.includes('https')) {
-      return this.img;
-    }
-    if (this.img) {
-      return `${environment.baseUrl}/upload/usuarios/${this.img}`;
-    } else {
+    if (!this.img) {
       return `${environment.baseUrl}/upload/usuarios/no-image`;
+    } else if (this.img.includes('https')) {
+      return this.img;
+    } else {
+      return `${environment.baseUrl}/upload/usuarios/${this.img}`;
     }
   }
 }
