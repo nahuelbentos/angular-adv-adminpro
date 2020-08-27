@@ -3,6 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { map } from 'rxjs/operators';
 import { Usuario } from '../models/usuario.model';
+import { Hospital } from '../models/hospital.model';
+import { Medico } from '../models/medico.model';
 
 @Injectable({
   providedIn: 'root',
@@ -32,10 +34,11 @@ export class BusquedasService {
         map((resp: any) => {
           switch (tipo) {
             case 'usuarios':
-              console.log(resp);
-
               return this.transformarUsuarios(resp.resultados);
-              break;
+            case 'hospitales':
+              return this.transformarHospitales(resp.resultados);
+            case 'medicos':
+              return this.transformarMedicos(resp.resultados);
 
             default:
               break;
@@ -55,6 +58,31 @@ export class BusquedasService {
           user.google,
           user.role,
           user.uid
+        )
+    );
+  }
+
+  private transformarHospitales(resultados: any): Hospital[] {
+    return resultados.map(
+      (hospital) =>
+        new Hospital(
+          hospital.nombre,
+          hospital._id,
+          hospital.usuario,
+          hospital.img
+        )
+    );
+  }
+
+  private transformarMedicos(resultados: any): Medico[] {
+    return resultados.map(
+      (medico) =>
+        new Medico(
+          medico.nombre,
+          medico._id,
+          medico.usuario,
+          medico.hospital,
+          medico.img
         )
     );
   }

@@ -24,18 +24,18 @@ export class ModalImagenComponent implements OnInit {
   }
 
   cambiarImagen(file: File) {
-    console.log(file);
+    this.imagenSubir = file;
+
     if (!file) {
       return (this.imgTemp = null);
     }
+
     const reader = new FileReader();
     reader.readAsDataURL(file);
 
     reader.onloadend = () => {
-      console.log(reader.result);
       this.imgTemp = reader.result;
     };
-    this.imagenSubir = file;
   }
 
   subirImagen() {
@@ -47,7 +47,7 @@ export class ModalImagenComponent implements OnInit {
         Swal.fire('Guardado', 'Se actualizo la imagen', 'success');
 
         this.modalImagenService.nuevaImagen.emit(img);
-        this.modalImagenService.cerrarModal();
+        this.cerrarModal();
       })
       .catch((err) => {
         console.log(err);

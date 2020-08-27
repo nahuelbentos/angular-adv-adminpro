@@ -33,11 +33,10 @@ export class UsuariosComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.cargarUsuarios();
     // Si se encuentra una nueva imagen, cargo nuevamente los datos
+
     this.imgSubs = this.modalImagenService.nuevaImagen
       .pipe(delay(100))
-      .subscribe((img) => {
-        this.cargarUsuarios();
-      });
+      .subscribe((img) => this.cargarUsuarios());
   }
 
   cambiarPagina(valor: number) {
@@ -67,10 +66,12 @@ export class UsuariosComponent implements OnInit, OnDestroy {
     if (filtro.length === 0) {
       return (this.usuarios = this.usuariosTemp);
     }
-    this.busquedasService.buscar('usuarios', filtro).subscribe((res) => {
-      this.usuarios = res;
-      console.log(res);
-    });
+    this.busquedasService
+      .buscar('usuarios', filtro)
+      .subscribe((res: Usuario[]) => {
+        this.usuarios = res;
+        console.log(res);
+      });
   }
 
   eliminarUsuario(usuario: Usuario) {
@@ -109,7 +110,6 @@ export class UsuariosComponent implements OnInit, OnDestroy {
   }
 
   abrirModal(usuario: Usuario) {
-    console.log(usuario);
     this.modalImagenService.abrirModal('usuarios', usuario.uid, usuario.img);
   }
 }
