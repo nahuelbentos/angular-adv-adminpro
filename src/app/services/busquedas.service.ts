@@ -47,6 +47,13 @@ export class BusquedasService {
       );
   }
 
+  busquedaGlobal(filtro: string) {
+    return this.http.get(
+      `${environment.baseUrl}/busqueda/${filtro}`,
+      this.headers
+    );
+  }
+
   private transformarUsuarios(resultados: any): Usuario[] {
     return resultados.map(
       (user) =>

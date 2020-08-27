@@ -43,6 +43,10 @@ export class UsuarioService {
     return this.usuario.uid || '';
   }
 
+  get role(): 'ADMIN_ROLE' | 'USER_ROLE' {
+    return this.usuario.role;
+  }
+
   googleInit() {
     return new Promise((resolve, reject) => {
       console.log('google init');
@@ -69,7 +73,8 @@ export class UsuarioService {
         map((res: any) => {
           const { email, google, nombre, role, img = '', uid } = res.usuario;
           this.usuario = new Usuario(nombre, email, '', img, google, role, uid);
-          localStorage.setItem('token', res.token);
+
+          this.guardarLocalStorage(res.token, res.menu);
           return true;
         }),
         // El catchError atrapa el error que pudiese ocurrir en este flujo y el "of" retorna un observable con el valor "false"
@@ -81,8 +86,7 @@ export class UsuarioService {
     console.log('creando usuairo');
     return this.http.post(`${environment.baseUrl}/usuarios`, formData).pipe(
       tap((res: any) => {
-        localStorage.setItem('token', res.token);
-        sessionStorage.setItem('token', res.token);
+        this.guardarLocalStorage(res.token, res.menu);
         console.log(res);
       })
     );
@@ -100,12 +104,16 @@ export class UsuarioService {
     );
   }
 
+  guardarLocalStorage(token: string, menu: any) {
+    localStorage.setItem('token', token);
+    sessionStorage.setItem('token', token);
+    localStorage.setItem('menu', JSON.stringify(menu));
+  }
   login(formData: LoginForm) {
     return this.http.post(`${environment.baseUrl}/login`, formData).pipe(
       tap((res: any) => {
-        localStorage.setItem('token', res.token);
-        sessionStorage.setItem('token', res.token);
         console.log(res);
+        this.guardarLocalStorage(res.token, res.menu);
       })
     );
   }
@@ -115,15 +123,14 @@ export class UsuarioService {
       .post(`${environment.baseUrl}/login/google`, { token })
       .pipe(
         tap((res: any) => {
-          localStorage.setItem('token', res.token);
-          sessionStorage.setItem('token', res.token);
-          console.log(res);
+          this.guardarLocalStorage(res.token, res.menu);
         })
       );
   }
 
   logout() {
     localStorage.removeItem('token');
+    localStorage.removeItem('menu');
 
     this.auth2.signOut().then(() => {
       this.ngZone.run(() => {
